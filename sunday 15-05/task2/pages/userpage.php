@@ -1,14 +1,8 @@
 <?php
 session_start();
+include_once('connect.php');
 $admin = 'rooayaseen@gmail.com';
-// $_SESSION['lastaLI']
-// print_r($_SESSION['arr']);
-// $_SESSION['fn'];
-// $_SESSION['mobile'];
-// $_SESSION['date'];
-// $_SESSION['email'];
-// $_SESSION['pass'];
-// $_SESSION['date_create'];
+
 if($_SESSION["userEmail"] !== $admin ){
     echo '<style type="text/css">
     table {
@@ -73,7 +67,7 @@ if($_SESSION["userEmail"] !== $admin ){
                <h3>Welcome <?php echo $_SESSION["userName"] ;?></h3>
                <p><?php echo $_SESSION["userEmail"] ;?></p>
                <p><?php echo $_SESSION["userMobile"] ;?></p>
-                <table class="table">
+                <table class="table" style='color:white'>
         <thead>
             <tr>
                 <th scope="col">Name</th>
@@ -81,22 +75,35 @@ if($_SESSION["userEmail"] !== $admin ){
                 <th scope="col">Password</th>
                 <th scope="col">Date Created</th>
                 <th scope="col">Date Last Login</th>
+                <th scope="col">Update</td>
+                <th scope="col">Delete</td>
             </tr>
         </thead>
         <tbody>
         <?php
-        
-        foreach ($_SESSION["usersData"] as $value) {
+         $sql1="SELECT * FROM user_inf ;";
+         $result= mysqli_query($conn , $sql1);
+         $result_check= mysqli_num_rows($result);
+        if ($result_check > 0) {
+            while ($row=mysqli_fetch_assoc($result)) {
+
             echo "<tr>
                     
-                    <td>".$value["name"]."</td>
-                    <td>".$value["email"]."</td>
-                    <td>".$value["password"]."</td>
-                    <td>".$value["Creation_Date"]."</td>
-                    <td>".$value["Last-Login-Date"]."</td>
+                    <td >".$row['fname']."</td>
+                    <td>".$row['email']."</td>
+                    <td>".$row['pass']."</td>
+                    <td>".$row['created_at']."</td>
+                    <td>".$row['loged_in']."</td>
+                    <td>"."
+                                 <form action='update.php' method='post'>
+                                 <input type='hidden' name='edit_id' value='".$row['id']."'>
+                                 <input type='submit' value='Update' name='edit_btn'> 
+                                 </form><br>"."</td>
+                               
                 </tr>";
             
         }
+    }
         ?>
         </tbody>
     </table>
